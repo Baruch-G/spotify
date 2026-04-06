@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,10 +20,15 @@ export class Register {
     password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d)[^\s]+$/)]],
   });
 
+  showSuccess = signal(false);
+
   onSubmit() {
     if (this.registerForm.valid) {
-      alert('Mock Registration Successful! Navigating to Search Home.');
-      this.router.navigate(['/home']);
+      localStorage.setItem('is_registered', 'true');
+      this.showSuccess.set(true);
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1800);
     } else {
       this.registerForm.markAllAsTouched();
     }

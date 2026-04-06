@@ -1,14 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
+// SCSS Variables
+$font-primary: 'Outfit', sans-serif;
+$color-spotify: #1DB954;
+$color-bg-dark: #0f172a;
+$color-text-primary: #ffffff;
+$color-text-secondary: #94a3b8;
+
+// CSS Variables (Maintained for runtime theming if necessary)
 :root {
-  --bg-dark: #0f172a;
+  --bg-dark: #{$color-bg-dark};
   --bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  --spotify-green: #1DB954;
-  --spotify-green-hover: #1ed760;
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
+  --spotify-green: #{$color-spotify};
+  --text-primary: #{$color-text-primary};
+  --text-secondary: #{$color-text-secondary};
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+// SCSS Mixin for reusable glassmorphism
+@mixin glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 * {
@@ -18,7 +35,7 @@
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: $font-primary;
   background: var(--bg-dark);
   background-image: var(--bg-gradient);
   color: var(--text-primary);
@@ -41,17 +58,12 @@ h1, h2, h3, h4 {
 
 /* Glassmorphism generic container */
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  @include glass-effect;
 }
 
-/* Buttons */
+/* Buttons using SCSS Nesting and Functions */
 .btn-primary {
-  background-color: var(--spotify-green);
+  background-color: $color-spotify;
   color: #fff;
   border: none;
   padding: 12px 32px;
@@ -64,12 +76,13 @@ h1, h2, h3, h4 {
   align-items: center;
   justify-content: center;
   gap: 8px;
-}
 
-.btn-primary:hover {
-  background-color: var(--spotify-green-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
+  &:hover {
+    // Demonstrating SCSS color math functions
+    background-color: lighten($color-spotify, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
+  }
 }
 
 /* Animations */

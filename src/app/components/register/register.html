@@ -8,7 +8,7 @@
     <h1>Create Account</h1>
     <p>Sign up to search for music discs via REST API.</p>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form" *ngIf="!showSuccess()">
       
       <div class="form-group">
         <label for="email">Email</label>
@@ -41,5 +41,12 @@
       
     </form>
     
+    <!-- Beautiful Success View -->
+    <div class="success-message animate-fade-in" *ngIf="showSuccess()">
+      <div class="success-icon">✓</div>
+      <h2>Registration Successful!</h2>
+      <p>Redirecting to Search API...</p>
+    </div>
+
   </div>
 </div>
