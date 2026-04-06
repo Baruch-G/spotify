@@ -18,6 +18,7 @@ export class DiscDetails implements OnInit {
   discId = '';
   discData = signal<any>(null);
   isLoading = signal(true);
+  imageLoaded = signal(false);
 
   ngOnInit() {
     this.discId = this.route.snapshot.paramMap.get('id') || '';

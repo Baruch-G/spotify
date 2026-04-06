@@ -13,6 +13,8 @@ export class DiscCard {
   @Input() disc!: SpotifyAlbum;
   @Output() discClick = new EventEmitter<SpotifyAlbum>();
 
+  imageLoaded = false;
+
   onClick() {
     this.discClick.emit(this.disc);
   }

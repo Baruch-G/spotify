@@ -180,4 +180,9 @@ export class Home implements OnInit, AfterViewInit {
     // But we'll pass the ID so the details page can fetch more if needed
     this.router.navigate(['/disc', disc.id], { state: { disc } });
   }
+
+  signOut() {
+    localStorage.removeItem('is_registered');
+    this.router.navigate(['/register']);
+  }
 }

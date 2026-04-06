@@ -1,5 +1,13 @@
 <div class="card glass-panel" (click)="onClick()" *ngIf="disc">
-  <img [src]="disc.images?.[0]?.url" [alt]="disc.name" class="card-img" *ngIf="disc.images?.length">
+  <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;" *ngIf="disc.images.length">
+    <div class="skeleton" *ngIf="!imageLoaded" style="width: 100%; height: 100%; border-radius: 8px; position: absolute; z-index: 5;"></div>
+    <img [src]="disc.images[0]?.url" 
+         [alt]="disc.name" 
+         class="card-img" 
+         (load)="imageLoaded = true"
+         [style.opacity]="imageLoaded ? 1 : 0"
+         style="transition: opacity 0.4s ease; position: relative; z-index: 10;">
+  </div>
   <div class="card-info">
     <h4>{{disc.name}}</h4>
     <p class="release-date">Released: {{disc.release_date}}</p>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,6 +21,12 @@ export class Register {
   });
 
   showSuccess = signal(false);
+
+  ngOnInit() {
+    if (localStorage.getItem('is_registered') === 'true') {
+      this.router.navigate(['/home']);
+    }
+  }
 
   onSubmit() {
     if (this.registerForm.valid) {
