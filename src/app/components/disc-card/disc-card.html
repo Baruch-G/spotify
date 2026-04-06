@@ -1,0 +1,7 @@
+<div class="card glass-panel" (click)="onClick()" *ngIf="disc">
+  <img [src]="disc.images?.[0]?.url" [alt]="disc.name" class="card-img" *ngIf="disc.images?.length">
+  <div class="card-info">
+    <h4>{{disc.name}}</h4>
+    <p class="release-date">Released: {{disc.release_date}}</p>
+  </div>
+</div>

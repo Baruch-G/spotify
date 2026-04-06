@@ -1,0 +1,81 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo-wrapper { margin-bottom: 0.5rem; }
+
+.spotify-logo {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 0 20px rgba(29, 185, 84, 0.4));
+}
+
+h1 { font-size: 2.2rem; margin: 0; }
+p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1rem; }
+
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
+  color: white;
+  font-size: 1rem;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--spotify-green);
+  background: rgba(255,255,255,0.15);
+}
+
+.form-control.is-invalid {
+  border-color: #ef4444;
+}
+
+.invalid-feedback {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.form-submit {
+  width: 100%;
+  margin-top: 1rem;
+}

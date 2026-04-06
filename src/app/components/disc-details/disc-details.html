@@ -1,0 +1,43 @@
+<div class="details-wrapper">
+  
+  <header class="details-header glass-panel">
+    <button class="nav-btn" (click)="goBack()">◀ Back to Search</button>
+  </header>
+
+  <div class="loader-container" *ngIf="isLoading() && !discData()">
+    <div class="loader"></div>
+  </div>
+
+  <main class="details-content glass-panel animate-fade-in" *ngIf="discData()">
+    
+    <div class="hero-section">
+      <img [src]="discData().images?.[0]?.url" [alt]="discData().name" class="hero-img">
+      <div class="hero-info">
+        <span class="label text-gradient">Album / Disc Information</span>
+        <h1 class="disc-title">{{discData().name}}</h1>
+        <p class="disc-artists">By: <strong>{{discData().artists?.[0]?.name}}</strong></p>
+        
+        <div class="metadata-tags">
+          <span class="tag">📅 {{discData().release_date}}</span>
+          <span class="tag">🎵 {{discData().total_tracks || discData().tracks?.items?.length || 0}} Tracks</span>
+          <span class="tag" *ngIf="discData().label">🏷️ Label: {{discData().label}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tracks-section" *ngIf="discData().tracks?.items?.length">
+      <h3>Tracklist</h3>
+      <div class="track-list">
+        <div class="track-item" *ngFor="let track of discData().tracks.items; let i = index">
+          <span class="track-number">{{i + 1}}</span>
+          <div class="track-info">
+            <span class="track-name">{{track.name}}</span>
+            <span class="track-artist" *ngIf="track.artists?.length > 1">{{track.artists[0]?.name}}</span>
+          </div>
+          <span class="track-duration">{{ (track.duration_ms / 60000) | number:'1.2-2' }} min</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>

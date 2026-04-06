@@ -1,0 +1,145 @@
+.details-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.details-header {
+  padding: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+}
+
+.nav-btn {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.2); }
+
+.details-content {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.hero-section {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-end;
+}
+
+.hero-img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+}
+
+.disc-title {
+  font-size: 4rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.disc-artists {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  strong { color: white; }
+}
+
+.metadata-tags {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  background: rgba(255,255,255,0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 1px solid var(--glass-border);
+}
+
+.tracks-section h3 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.track-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.track-number {
+  width: 40px;
+  color: var(--text-secondary);
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-name {
+  font-weight: 600;
+}
+
+.track-artist {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.track-duration {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .disc-title { font-size: 2.5rem; }
+  .metadata-tags { justify-content: center; flex-wrap: wrap; }
+}

@@ -1,0 +1,71 @@
+<div class="home-wrapper">
+  <header class="home-header glass-panel">
+    <h2>Music Discs Search</h2>
+    <div class="header-actions">
+      <button class="nav-btn" routerLink="/dashboard">🏠 Back to Dashboard</button>
+    </div>
+  </header>
+
+  <main class="home-content">
+    <div class="search-section glass-panel">
+      
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          [formControl]="searchControl" 
+          placeholder="Search for an album / disc..." 
+          class="search-input"
+        >
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <!-- Recent Queries -->
+      <div class="recent-queries" *ngIf="recentQueries().length > 0">
+        <h4>Recent Searches:</h4>
+        <div class="pills-container">
+          <button 
+            class="query-pill" 
+            *ngFor="let query of recentQueries()" 
+            (click)="onRecentQueryClick(query)">
+            {{query}}
+          </button>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Results Section with Virtual Scrolling -->
+    <div class="results-section">
+      <div class="loader-container" *ngIf="isLoading()">
+        <div class="loader"></div>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading() && searchControl.value && searchResults().length === 0">
+        <p>No discs found matching "{{searchControl.value}}". Try another search!</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading() && !searchControl.value">
+        <p>Start typing above to search the Disc API.</p>
+      </div>
+
+      <cdk-virtual-scroll-viewport 
+        itemSize="120" 
+        class="virtual-scroll-viewport" 
+        *ngIf="!isLoading() && searchResults().length > 0"
+        (scrolledIndexChange)="onScroll($event)">
+        
+        <app-disc-card 
+          *cdkVirtualFor="let disc of searchResults()" 
+          [disc]="disc"
+          (discClick)="onDiscClick($event)">
+        </app-disc-card>
+        
+        <!-- Bottom Loader for Infinite Scroll -->
+        <div class="bottom-loader" *ngIf="isFetchingMore()" style="text-align: center; padding: 1rem; color: var(--spotify-green);">
+          Loading more items...
+        </div>
+
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </main>
+</div>

@@ -11,7 +11,7 @@ import { of } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.css']
+  styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
   private authService = inject(AuthService);

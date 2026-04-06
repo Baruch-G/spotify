@@ -46,7 +46,7 @@ export class Callback implements OnInit {
     if (code) {
       try {
         await this.authService.handleCallback(code);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/home']);
       } catch (err) {
         console.error('Failed to handle callback', err);
         this.router.navigate(['/login']);

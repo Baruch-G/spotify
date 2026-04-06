@@ -1,0 +1,48 @@
+<div class="login-container animate-fade-in">
+  <div class="login-card glass-panel">
+    <div class="logo-wrapper">
+      <svg viewBox="0 0 24 24" fill="var(--spotify-green)" class="spotify-logo">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.02 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15.001 10.62 18.72 12.9c.42.18.6.78.24 1.14zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.42-1.02.599-1.56.3z"/>
+      </svg>
+    </div>
+    <h1>Create Account</h1>
+    <p>Sign up to search for music discs via REST API.</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="example@email.com" class="form-control" [class.is-invalid]="f['email'].invalid && f['email'].touched" />
+        <div class="invalid-feedback" *ngIf="f['email'].invalid && f['email'].touched">
+          <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+          <span *ngIf="f['email'].errors?.['pattern']">Please enter a valid email format.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" placeholder="johndoe123" class="form-control" [class.is-invalid]="f['username'].invalid && f['username'].touched" />
+        <div class="invalid-feedback" *ngIf="f['username'].invalid && f['username'].touched">
+          <span *ngIf="f['username'].errors?.['required']">Username is required.</span>
+          <span *ngIf="f['username'].errors?.['pattern']">English chars/numbers only. Cannot start with a number. No spaces.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••" class="form-control" [class.is-invalid]="f['password'].invalid && f['password'].touched" />
+        <div class="invalid-feedback" *ngIf="f['password'].invalid && f['password'].touched">
+          <span *ngIf="f['password'].errors?.['required']">Password is required.</span>
+          <span *ngIf="f['password'].errors?.['pattern']">Must contain at least 1 uppercase letter, 1 number, and no spaces.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary form-submit">Register</button>
+      
+    </form>
+    
+    <div class="login-link">
+      <a href="/login" style="color: var(--text-secondary); text-decoration: none;">Already have an account? Login</a>
+    </div>
+  </div>
+</div>
