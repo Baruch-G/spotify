@@ -1,11 +1,12 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SpotifyService } from '../../services/spotify.service';
+import { SearchStateService } from '../../services/search-state.service';
 import { DiscCard } from '../disc-card/disc-card';
 
 @Component({
@@ -15,25 +16,37 @@ import { DiscCard } from '../disc-card/disc-card';
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
-export class Home implements OnInit {
+export class Home implements OnInit, AfterViewInit {
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
   private spotifyService = inject(SpotifyService);
+  private searchState = inject(SearchStateService);
   private router = inject(Router);
 
+  private initialScrollRestored = false;
+  private pendingScrollIndex = 0;
+
   searchControl = new FormControl('');
-  searchResults = signal<any[]>([]);
   recentQueries = signal<string[]>([]);
   isLoading = signal(false);
-  
-  // Infinite Scroll State
-  currentQuery = signal('');
-  currentOffset = signal(0);
   isFetchingMore = signal(false);
-  hasMore = signal(true);
+
+  // Directly mapping UI helpers to Global State
+  searchResults = this.searchState.searchResults;
+  hasMore = this.searchState.hasMore;
+  currentQuery = this.searchState.currentQuery;
+  currentOffset = this.searchState.currentOffset;
 
   private searchSubject = new Subject<{query: string, offset: number}>();
 
   ngOnInit() {
+    this.pendingScrollIndex = this.searchState.lastScrollIndex();
     this.loadRecentQueries();
+
+    // Recover value softly if returning from details page
+    if (this.currentQuery()) {
+      this.searchControl.setValue(this.currentQuery(), { emitEvent: false });
+    }
 
     this.searchControl.valueChanges
       .pipe(
@@ -44,16 +57,13 @@ export class Home implements OnInit {
         if (query && query.trim() !== '') {
           const cleanQuery = query.trim();
           if (cleanQuery !== this.currentQuery()) {
-            this.searchResults.set([]);
-            this.currentOffset.set(0);
-            this.hasMore.set(true);
-            this.currentQuery.set(cleanQuery);
+            this.searchState.resetAndInitSearch(cleanQuery);
             this.saveQuery(cleanQuery);
             this.isLoading.set(true);
           }
           this.searchSubject.next({ query: cleanQuery, offset: this.currentOffset() });
         } else {
-          this.searchResults.set([]);
+          this.searchState.resetAndInitSearch('');
         }
       });
 
@@ -92,6 +102,12 @@ export class Home implements OnInit {
   }
 
   onScroll(index: number) {
+    // Ignore the native remounting 0 emission if we are actively trying to restore a past scroll!
+    if (!this.initialScrollRestored && index === 0 && this.pendingScrollIndex > 0) {
+      return; 
+    }
+
+    this.searchState.lastScrollIndex.set(index);
     const totalItems = this.searchResults().length;
     
     // Changing threshold from index + 10 to index + 5.
@@ -99,6 +115,19 @@ export class Home implements OnInit {
     if (index + 5 >= totalItems && !this.isFetchingMore() && this.hasMore()) {
       this.fetchMore();
     }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.viewport && this.pendingScrollIndex > 0) {
+        this.viewport.scrollToIndex(this.pendingScrollIndex, 'smooth');
+        
+        // Wait a frame before unlocking normal scroll recording
+        setTimeout(() => this.initialScrollRestored = true, 100);
+      } else {
+        this.initialScrollRestored = true;
+      }
+    }, 50);
   }
 
   saveQuery(query: string) {
