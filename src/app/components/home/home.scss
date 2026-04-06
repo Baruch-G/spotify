@@ -26,7 +26,9 @@
   text-decoration: none;
 }
 
-.nav-btn:hover { background: rgba(255, 255, 255, 0.2); }
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
 
 .home-content {
   display: flex;
@@ -134,7 +136,7 @@
 }
 
 .loader {
-  border: 3px solid rgba(255,255,255,0.1);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   border-top: 3px solid var(--spotify-green);
   border-radius: 50%;
   width: 40px;
@@ -143,6 +145,35 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-wrapper {
+    padding: 0.5rem;
+  }
+
+  .home-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .text-header {
+    font-size: 1.2rem;
+  }
+
+
+  .search-section {
+    padding: 1rem;
+  }
+
+  .search-input {
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+    font-size: 1rem;
+  }
 }

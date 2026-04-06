@@ -1,6 +1,6 @@
 <div class="home-wrapper">
   <header class="home-header glass-panel">
-    <h2>Music Discs Search</h2>
+    <h2 class="text-header">Music Discs Search</h2>
     <div class="header-actions">
       <button class="nav-btn" (click)="signOut()">Sign Out</button>
     </div>
@@ -12,6 +12,7 @@
       <div class="search-input-wrapper">
         <input 
           type="text" 
+          name="search"
           [formControl]="searchControl" 
           placeholder="Search for an album / disc..." 
           class="search-input"

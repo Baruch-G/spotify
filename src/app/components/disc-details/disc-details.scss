@@ -169,11 +169,108 @@
 }
 
 @media (max-width: 768px) {
+  .details-wrapper {
+    padding: 0.5rem; // Edge to edge on mobile
+  }
+  
+  .details-content {
+    padding: 1.5rem 0.75rem;
+    gap: 1.5rem;
+    border-radius: 0; // Full width feel
+    border-left: none;
+    border-right: none;
+  }
+
   .hero-section {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 1.25rem;
   }
-  .disc-title { font-size: 2.5rem; }
-  .metadata-tags { justify-content: center; flex-wrap: wrap; }
+  
+  .hero-img {
+    width: 180px;
+    height: 180px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  }
+
+  .disc-title { 
+    font-size: 1.8rem; 
+    margin-top: 0.5rem;
+  }
+
+  .disc-artists {
+    font-size: 1.1rem;
+  }
+  
+  .metadata-tags { 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  /* Professional Mobile Tracklist - Swapped Link/Duration */
+  .track-item {
+    display: grid;
+    grid-template-columns: 28px 1fr 110px; // Wider right column for button
+    grid-template-areas: 
+      "num info link"
+      "num dur link";
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+    gap: 0 0.75rem;
+  }
+
+  .track-number {
+    grid-area: num;
+    width: auto;
+    text-align: left;
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  .track-info {
+    grid-area: info;
+    min-width: 0;
+    align-self: flex-end;
+  }
+
+  .track-name {
+    font-size: 0.9rem;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+
+  .track-duration {
+    grid-area: dur;
+    font-size: 0.75rem;
+    width: auto;
+    text-align: left;
+    opacity: 0.6;
+    align-self: flex-start;
+  }
+
+  .track-fallback {
+    grid-area: link;
+    width: 100%;
+    margin: 0;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .spotify-link {
+    font-size: 0.65rem;
+    padding: 6px 8px;
+    letter-spacing: 0px;
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
 }
