@@ -1,3 +1,4 @@
+@use "sass:color";
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 // SCSS Variables
@@ -78,8 +79,8 @@ h1, h2, h3, h4 {
   gap: 8px;
 
   &:hover {
-    // Demonstrating SCSS color math functions
-    background-color: lighten($color-spotify, 5%);
+    // Demonstrating modern Dart Sass color math functions
+    background-color: color.adjust($color-spotify, $lightness: 5%);
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(29, 185, 84, 0.3);
   }

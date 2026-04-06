@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { SpotifyService } from '../../services/spotify.service';
 import { SearchStateService } from '../../services/search-state.service';
+import { SpotifyAlbum } from '../../models/spotify.models';
 import { DiscCard } from '../disc-card/disc-card';
 
 @Component({
@@ -69,7 +70,17 @@ export class Home implements OnInit, AfterViewInit {
 
     // Handle all search execution here, safely cancelling trailing requests via switchMap
     this.searchSubject.pipe(
-      switchMap(({query, offset}) => this.spotifyService.search(query, 'album', offset))
+      switchMap(({query, offset}) => 
+        this.spotifyService.search(query, 'album', offset).pipe(
+          catchError(err => {
+            console.error('Handled Search network drop keeping stream alive:', err);
+            this.isLoading.set(false);
+            this.isFetchingMore.set(false);
+            // Returns a safe empty array structure instantly preventing the switchMap core from dying
+            return of({ albums: { items: [] } }); 
+          })
+        )
+      )
     ).subscribe({
       next: (res) => {
         if (res?.albums?.items) {
@@ -163,7 +174,7 @@ export class Home implements OnInit, AfterViewInit {
     this.searchControl.setValue(query);
   }
 
-  onDiscClick(disc: any) {
+  onDiscClick(disc: SpotifyAlbum) {
     // Navigate to disc details routing, passing the whole disc object via state
     // so we don't necessarily have to re-fetch if we have enough data (depending on requirements)
     // But we'll pass the ID so the details page can fetch more if needed

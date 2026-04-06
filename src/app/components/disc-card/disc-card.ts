@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SpotifyAlbum } from '../../models/spotify.models';
 
 @Component({
   selector: 'app-disc-card',
@@ -9,8 +10,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./disc-card.scss']
 })
 export class DiscCard {
-  @Input() disc: any;
-  @Output() discClick = new EventEmitter<any>();
+  @Input() disc!: SpotifyAlbum;
+  @Output() discClick = new EventEmitter<SpotifyAlbum>();
 
   onClick() {
     this.discClick.emit(this.disc);
