@@ -1,0 +1,94 @@
+<div class="dashboard-wrapper animate-fade-in">
+  <aside class="sidebar glass-panel">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="var(--spotify-green)" class="logo-small">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.02 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15.001 10.62 18.72 12.9c.42.18.6.78.24 1.14zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.42-1.02.599-1.56.3z"/>
+      </svg>
+      <span class="brand-text text-gradient">NgSpotify</span>
+    </div>
+    <nav class="nav-menu">
+      <a class="nav-item" [class.active]="activeView() === 'home'" (click)="switchView('home')">Home</a>
+      <a class="nav-item" [class.active]="activeView() === 'search'" (click)="switchView('search')">Search</a>
+      <a class="nav-item" [class.active]="activeView() === 'library'" (click)="switchView('library')">Your Library</a>
+    </nav>
+    <div class="user-profile" *ngIf="userProfile()">
+      <div class="user-avatar">{{userProfile().display_name?.[0] || 'U'}}</div>
+      <span class="user-name">{{userProfile().display_name || 'User'}}</span>
+    </div>
+  </aside>
+
+  <main class="dashboard-content">
+    <header class="dashboard-header glass-panel">
+      <h2>Welcome Back</h2>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </header>
+
+    <div class="loading-state" *ngIf="isLoading()">
+      <div class="loader"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoading()">
+    
+      <!-- HOME VIEW -->
+      <ng-container *ngIf="activeView() === 'home'">
+        <section class="content-section">
+          <h3>Your Top Tracks</h3>
+          <div class="grid-container">
+            <div class="card glass-panel" *ngFor="let track of topTracks()">
+              <img [src]="track.album.images[0]?.url" [alt]="track.name" class="card-img" *ngIf="track.album?.images?.length">
+              <div class="card-info">
+                <h4>{{track.name}}</h4>
+                <p>{{track.artists[0]?.name}}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section" style="margin-top: 3rem;">
+          <h3>Your Playlists</h3>
+          <div class="grid-container">
+            <div class="card glass-panel" *ngFor="let playlist of userPlaylists()">
+              <img [src]="playlist.images[0]?.url" [alt]="playlist.name" class="card-img" *ngIf="playlist.images?.length">
+              <div class="card-info">
+                <h4>{{playlist.name}}</h4>
+                <p>{{playlist.owner?.display_name}}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ng-container>
+
+      <!-- LIBRARY VIEW -->
+      <ng-container *ngIf="activeView() === 'library'">
+        <section class="content-section">
+          <h3>Saved Albums</h3>
+          <div class="grid-container">
+            <div class="card glass-panel" *ngFor="let album of savedAlbums()">
+              <img [src]="album.images[0]?.url" [alt]="album.name" class="card-img" *ngIf="album.images?.length">
+              <div class="card-info">
+                <h4>{{album.name}}</h4>
+                <p>{{album.artists[0]?.name}}</p>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="savedAlbums().length === 0" style="color: var(--text-secondary); margin-top: 1rem;">No saved albums found.</p>
+        </section>
+
+        <section class="content-section" style="margin-top: 3rem;">
+          <h3>Liked Songs</h3>
+          <div class="grid-container">
+            <div class="card glass-panel" *ngFor="let track of savedTracks()">
+              <img [src]="track.album.images[0]?.url" [alt]="track.name" class="card-img" *ngIf="track.album?.images?.length">
+              <div class="card-info">
+                <h4>{{track.name}}</h4>
+                <p>{{track.artists[0]?.name}}</p>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="savedTracks().length === 0" style="color: var(--text-secondary); margin-top: 1rem;">No liked songs found.</p>
+        </section>
+      </ng-container>
+      
+    </ng-container>
+  </main>
+</div>

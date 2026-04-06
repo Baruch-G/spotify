@@ -3,9 +3,13 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { spotifyInterceptor } from './services/spotify.interceptor';
+
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
-  ]
+    provideBrowserGlobalErrorListeners(), 
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([spotifyInterceptor]))
+  ],
 };
