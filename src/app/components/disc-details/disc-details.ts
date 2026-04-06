@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpotifyService } from '../../services/spotify.service';
+import { CollectionService } from '../../services/collection.service';
 
 @Component({
   selector: 'app-disc-details',
@@ -14,11 +15,17 @@ export class DiscDetails implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private spotifyService = inject(SpotifyService);
+  private collectionService = inject(CollectionService);
 
   discId = '';
   discData = signal<any>(null);
   isLoading = signal(true);
   imageLoaded = signal(false);
+
+  // Helper to check if currently liked
+  get isLiked(): boolean {
+    return this.discData() ? this.collectionService.isInCollection(this.discData().id) : false;
+  }
 
   ngOnInit() {
     this.discId = this.route.snapshot.paramMap.get('id') || '';
@@ -52,5 +59,11 @@ export class DiscDetails implements OnInit {
 
   goBack() {
     this.router.navigate(['/home']);
+  }
+
+  onToggleCollection() {
+    if (this.discData()) {
+      this.collectionService.toggleCollection(this.discData());
+    }
   }
 }

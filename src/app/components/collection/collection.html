@@ -1,0 +1,25 @@
+<div class="collection-wrapper">
+  <header class="collection-header glass-panel">
+    <div class="header-left">
+      <button class="nav-btn" routerLink="/home">◀ Back to Search</button>
+      <h2>My Collection ({{savedDiscs().length}})</h2>
+    </div>
+  </header>
+
+  <main class="collection-content">
+    <div class="empty-state glass-panel" *ngIf="savedDiscs().length === 0">
+      <div class="empty-icon">📂</div>
+      <h3>Your collection is empty</h3>
+      <p>Start searching for albums and click the heart for them to appear here.</p>
+      <button class="btn-primary" routerLink="/home">Browse Music</button>
+    </div>
+
+    <div class="collection-grid" *ngIf="savedDiscs().length > 0">
+      <app-disc-card 
+        *ngFor="let disc of savedDiscs()" 
+        [disc]="disc"
+        (discClick)="onDiscClick($event)">
+      </app-disc-card>
+    </div>
+  </main>
+</div>

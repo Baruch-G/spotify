@@ -11,17 +11,6 @@
   display: flex;
 }
 
-.nav-btn {
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border: 1px solid var(--glass-border);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.nav-btn:hover { background: rgba(255,255,255,0.2); }
 
 .details-content {
   padding: 3rem;
@@ -81,6 +70,53 @@
   border-radius: 20px;
   font-size: 0.9rem;
   border: 1px solid var(--glass-border);
+}
+
+.collection-action {
+  margin-top: 1rem;
+}
+
+.btn-collection {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid var(--glass-border);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.3s;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &.liked {
+    background: rgba(29, 185, 84, 0.15);
+    border-color: rgba(29, 185, 84, 0.4);
+    color: #1DB954;
+
+    svg {
+      color: #1DB954;
+      animation: heart-pulse 0.4s ease-out;
+    }
+  }
+}
+
+@keyframes heart-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
 }
 
 .tracks-section h3 {
@@ -213,6 +249,16 @@
   .tag {
     font-size: 0.75rem;
     padding: 0.3rem 0.7rem;
+  }
+
+  .collection-action {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-collection {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
   }
 
   /* Professional Mobile Tracklist - Swapped Link/Duration */

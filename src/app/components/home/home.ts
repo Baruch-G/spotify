@@ -38,7 +38,7 @@ export class Home implements OnInit, AfterViewInit {
   currentQuery = this.searchState.currentQuery;
   currentOffset = this.searchState.currentOffset;
 
-  private searchSubject = new Subject<{query: string, offset: number}>();
+  private searchSubject = new Subject<{ query: string, offset: number }>();
 
   ngOnInit() {
     this.pendingScrollIndex = this.searchState.lastScrollIndex();
@@ -70,14 +70,14 @@ export class Home implements OnInit, AfterViewInit {
 
     // Handle all search execution here, safely cancelling trailing requests via switchMap
     this.searchSubject.pipe(
-      switchMap(({query, offset}) => 
+      switchMap(({ query, offset }) =>
         this.spotifyService.search(query, 'album', offset).pipe(
           catchError(err => {
             console.error('Handled Search network drop keeping stream alive:', err);
             this.isLoading.set(false);
             this.isFetchingMore.set(false);
             // Returns a safe empty array structure instantly preventing the switchMap core from dying
-            return of({ albums: { items: [] } }); 
+            return of({ albums: { items: [] } });
           })
         )
       )
@@ -105,7 +105,7 @@ export class Home implements OnInit, AfterViewInit {
 
   fetchMore() {
     if (this.isFetchingMore() || !this.hasMore()) return;
-    
+
     this.isFetchingMore.set(true);
     const nextOffset = this.currentOffset() + 10;
     this.currentOffset.set(nextOffset);
@@ -115,12 +115,12 @@ export class Home implements OnInit, AfterViewInit {
   onScroll(index: number) {
     // Ignore the native remounting 0 emission if we are actively trying to restore a past scroll!
     if (!this.initialScrollRestored && index === 0 && this.pendingScrollIndex > 0) {
-      return; 
+      return;
     }
 
     this.searchState.lastScrollIndex.set(index);
     const totalItems = this.searchResults().length;
-    
+
     // Changing threshold from index + 10 to index + 5.
     // When virtual scroller mounts, it emits index 0. 
     if (index + 5 >= totalItems && !this.isFetchingMore() && this.hasMore()) {
@@ -132,7 +132,7 @@ export class Home implements OnInit, AfterViewInit {
     setTimeout(() => {
       if (this.viewport && this.pendingScrollIndex > 0) {
         this.viewport.scrollToIndex(this.pendingScrollIndex, 'smooth');
-        
+
         // Wait a frame before unlocking normal scroll recording
         setTimeout(() => this.initialScrollRestored = true, 100);
       } else {
@@ -143,18 +143,18 @@ export class Home implements OnInit, AfterViewInit {
 
   saveQuery(query: string) {
     let queries = [...this.recentQueries()];
-    
+
     // Remove if already exists to push it to the top
     queries = queries.filter(q => q.toLowerCase() !== query.toLowerCase());
-    
+
     // Add to beginning
     queries.unshift(query);
-    
+
     // Keep only last 5
     if (queries.length > 5) {
       queries = queries.slice(0, 5);
     }
-    
+
     this.recentQueries.set(queries);
     localStorage.setItem('disc_recent_queries', JSON.stringify(queries));
   }
@@ -181,8 +181,14 @@ export class Home implements OnInit, AfterViewInit {
     this.router.navigate(['/disc', disc.id], { state: { disc } });
   }
 
+  onCollectionClick() {
+    this.router.navigate(['/collection']);
+  }
+
   signOut() {
     localStorage.removeItem('is_registered');
+    localStorage.removeItem('disc_recent_queries');
+    localStorage.removeItem('disc_collection');
     this.router.navigate(['/register']);
   }
 }
