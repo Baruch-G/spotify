@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SpotifyService } from '../../services/spotify.service';
 import { DiscCard } from '../disc-card/disc-card';
 
@@ -29,6 +30,8 @@ export class Home implements OnInit {
   isFetchingMore = signal(false);
   hasMore = signal(true);
 
+  private searchSubject = new Subject<{query: string, offset: number}>();
+
   ngOnInit() {
     this.loadRecentQueries();
 
@@ -39,29 +42,25 @@ export class Home implements OnInit {
       )
       .subscribe(query => {
         if (query && query.trim() !== '') {
-          this.performSearch(query.trim());
+          const cleanQuery = query.trim();
+          if (cleanQuery !== this.currentQuery()) {
+            this.searchResults.set([]);
+            this.currentOffset.set(0);
+            this.hasMore.set(true);
+            this.currentQuery.set(cleanQuery);
+            this.saveQuery(cleanQuery);
+            this.isLoading.set(true);
+          }
+          this.searchSubject.next({ query: cleanQuery, offset: this.currentOffset() });
         } else {
           this.searchResults.set([]);
         }
       });
-  }
 
-  performSearch(query: string) {
-    if (query !== this.currentQuery()) {
-      this.searchResults.set([]);
-      this.currentOffset.set(0);
-      this.hasMore.set(true);
-      this.currentQuery.set(query);
-    }
-
-    if (this.currentOffset() === 0) {
-      this.isLoading.set(true);
-    }
-    
-    this.saveQuery(query);
-    
-    // Using the search endpoint strictly for 'album' to map to the 'discs' requirement
-    this.spotifyService.search(query, 'album', this.currentOffset()).subscribe({
+    // Handle all search execution here, safely cancelling trailing requests via switchMap
+    this.searchSubject.pipe(
+      switchMap(({query, offset}) => this.spotifyService.search(query, 'album', offset))
+    ).subscribe({
       next: (res) => {
         if (res?.albums?.items) {
           const items = res.albums.items;
@@ -87,14 +86,17 @@ export class Home implements OnInit {
     if (this.isFetchingMore() || !this.hasMore()) return;
     
     this.isFetchingMore.set(true);
-    this.currentOffset.set(this.currentOffset() + 10);
-    this.performSearch(this.currentQuery());
+    const nextOffset = this.currentOffset() + 10;
+    this.currentOffset.set(nextOffset);
+    this.searchSubject.next({ query: this.currentQuery(), offset: nextOffset });
   }
 
   onScroll(index: number) {
     const totalItems = this.searchResults().length;
-    // Trigger when user scrolls within 5 items of the bottom
-    if (index + 10 >= totalItems && !this.isFetchingMore() && this.hasMore()) {
+    
+    // Changing threshold from index + 10 to index + 5.
+    // When virtual scroller mounts, it emits index 0. 
+    if (index + 5 >= totalItems && !this.isFetchingMore() && this.hasMore()) {
       this.fetchMore();
     }
   }
